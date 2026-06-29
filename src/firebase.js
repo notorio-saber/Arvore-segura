@@ -1,28 +1,43 @@
-// Inicialização central do Firebase (Auth, Firestore, Storage).
-// As credenciais vêm de variáveis de ambiente — nunca commitar .env.
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// Configuração local do app sem depender de chaves externas.
+// A autenticação e o banco de dados ficam no armazenamento local do navegador.
+const STORAGE_PREFIX = "arvore-segura";
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+function getStorageKey(key) {
+  return `${STORAGE_PREFIX}:${key}`;
+}
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+export function readStorage(key, fallback = null) {
+  if (typeof window === "undefined") {
+    return fallback;
+  }
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+  try {
+    const raw = window.localStorage.getItem(getStorageKey(key));
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
-// ID do município atendido por esta instância do app.
-// Em produção, cada município pode ter seu próprio deploy/subdomínio,
-// todos apontando para o mesmo projeto Firebase, mudando só essa variável.
+export function writeStorage(key, value) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const serialized = JSON.stringify(value);
+  window.localStorage.setItem(getStorageKey(key), serialized);
+}
+
+export function broadcastStorageChange(key) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent("arvore-segura-storage", { detail: key }));
+}
+
 export const MUNICIPIO_ID = import.meta.env.VITE_MUNICIPIO_ID || "irati-pr";
 
-export default app;
+export default {
+  MUNICIPIO_ID,
+};

@@ -1,17 +1,6 @@
-// Camada de acesso a dados: reportes de risco arbóreo.
-// Estrutura multi-tenant: municipios/{municipioId}/reportes/{reporteId}
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  onSnapshot,
-  query,
-  orderBy,
-  serverTimestamp,
-} from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../firebase";
+// Camada de acesso a dados local.
+// Reportes de risco arbóreo são salvos no armazenamento local do navegador.
+import { broadcastStorageChange, readStorage, writeStorage } from "../firebase";
 
 export const CATEGORIAS = [
   { id: "galho_quebrado", label: "Galho quebrado ou pendente" },
@@ -28,60 +17,66 @@ export const STATUS = {
   concluido: { label: "Concluído", color: "bg-green-100 text-green-800" },
 };
 
-function reportesRef(municipioId) {
-  return collection(db, "municipios", municipioId, "reportes");
+function getReportesKey(municipioId) {
+  return `reportes:${municipioId}`;
 }
 
-/**
- * Envia um novo reporte: faz upload da foto (se houver) e grava o documento.
- * @param {string} municipioId
- * @param {{categoria:string, descricao:string, lat:number, lng:number, foto?:File, contato?:string}} dados
- * @param {string} uid - uid do usuário autenticado (anônimo ou não)
- */
+function readReportes(municipioId) {
+  return readStorage(getReportesKey(municipioId), []);
+}
+
+function writeReportes(municipioId, reportes) {
+  writeStorage(getReportesKey(municipioId), reportes);
+  broadcastStorageChange(getReportesKey(municipioId));
+}
+
 export async function criarReporte(municipioId, dados, uid) {
-  let fotoUrl = null;
-
-  if (dados.foto) {
-    const ext = dados.foto.name?.split(".").pop() || "jpg";
-    const path = `reportes/${municipioId}/${uid}-${Date.now()}.${ext}`;
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, dados.foto, {
-      contentType: dados.foto.type || "image/jpeg",
-    });
-    fotoUrl = await getDownloadURL(storageRef);
-  }
-
-  const payload = {
+  const reportes = readReportes(municipioId);
+  const novoReporte = {
+    id: `reporte-${Date.now()}`,
     categoria: dados.categoria,
     descricao: dados.descricao || "",
     localizacao: { lat: dados.lat, lng: dados.lng },
-    fotoUrl,
+    fotoUrl: null,
     contato: dados.contato || null,
     status: "pendente",
     reportadoPor: uid,
-    criadoEm: serverTimestamp(),
-    atualizadoEm: serverTimestamp(),
+    criadoEm: new Date().toISOString(),
+    atualizadoEm: new Date().toISOString(),
   };
 
-  return addDoc(reportesRef(municipioId), payload);
+  writeReportes(municipioId, [novoReporte, ...reportes]);
+  return { id: novoReporte.id };
 }
 
-/**
- * Assina (real-time) a lista de reportes de um município, mais recentes primeiro.
- * Retorna a função de unsubscribe.
- */
 export function escutarReportes(municipioId, callback) {
-  const q = query(reportesRef(municipioId), orderBy("criadoEm", "desc"));
-  return onSnapshot(q, (snapshot) => {
-    const reportes = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const emit = () => {
+    const reportes = readReportes(municipioId).sort((a, b) => b.criadoEm.localeCompare(a.criadoEm));
     callback(reportes);
-  });
+  };
+
+  emit();
+
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  const onChange = () => emit();
+  window.addEventListener("arvore-segura-storage", onChange);
+
+  return () => {
+    window.removeEventListener("arvore-segura-storage", onChange);
+  };
 }
 
 export async function atualizarStatus(municipioId, reporteId, novoStatus) {
-  const reporteDoc = doc(db, "municipios", municipioId, "reportes", reporteId);
-  return updateDoc(reporteDoc, {
-    status: novoStatus,
-    atualizadoEm: serverTimestamp(),
-  });
+  const reportes = readReportes(municipioId);
+  const atualizados = reportes.map((reporte) =>
+    reporte.id === reporteId
+      ? { ...reporte, status: novoStatus, atualizadoEm: new Date().toISOString() }
+      : reporte
+  );
+
+  writeReportes(municipioId, atualizados);
+  return atualizados;
 }
