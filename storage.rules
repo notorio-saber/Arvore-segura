@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Fotos de reportes: cidadão (qualquer autenticado, inclusive anônimo) pode enviar,
+    // mas não listar/ler diretamente o storage — a URL de download fica só no Firestore,
+    // visível apenas para a equipe municipal vinculada (via regra do Firestore).
+    match /reportes/{municipioId}/{arquivo} {
+      allow create: if request.auth != null
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+
+      allow read: if request.auth != null
+        && firestore.exists(/databases/(default)/documents/staff/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/staff/$(request.auth.uid)).data.municipioId == municipioId;
+
+      allow update, delete: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

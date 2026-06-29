@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Vínculo equipe municipal <-> município. Só leitura do próprio doc.
+    match /staff/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false; // gerenciado via Firebase Admin / console, nunca pelo client
+    }
+
+    match /municipios/{municipioId} {
+      allow read: if true; // metadados públicos (nome do município, etc.)
+      allow write: if false;
+
+      match /reportes/{reporteId} {
+        // Qualquer usuário autenticado (inclusive anônimo) pode CRIAR um reporte,
+        // desde que o campo reportadoPor seja o próprio uid e o status inicial seja "pendente".
+        allow create: if request.auth != null
+          && request.resource.data.reportadoPor == request.auth.uid
+          && request.resource.data.status == "pendente";
+
+        // Leitura e atualização de status: somente equipe vinculada a este município.
+        allow read, update: if request.auth != null
+          && exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+          && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.municipioId == municipioId;
+
+        allow delete: if false;
+      }
+    }
+  }
+}
