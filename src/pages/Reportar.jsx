@@ -144,8 +144,8 @@ export default function Reportar() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-3 sm:px-4 sm:py-4">
-      <div className="flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6">
+    <div className="flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-3 sm:px-4 sm:py-4 md:overflow-visible md:py-6">
+      <div className="flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6 md:h-auto md:overflow-visible">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
@@ -202,7 +202,7 @@ export default function Reportar() {
         )}
 
         {(etapa === ETAPAS.TIPO || etapa === ETAPAS.DESCRICAO || etapa === ETAPAS.FOTO || etapa === ETAPAS.LOCALIZACAO) && (
-          <div className="flex-1 overflow-auto rounded-3xl border border-gray-200 bg-white p-4 sm:p-6">
+          <div className="flex-1 overflow-auto rounded-3xl border border-gray-200 bg-white p-4 sm:p-6 xl:overflow-visible">
             <form onSubmit={async (e) => {
               if (etapa === ETAPAS.LOCALIZACAO) {
                 await handleSubmit(e);

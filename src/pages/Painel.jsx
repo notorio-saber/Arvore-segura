@@ -59,9 +59,12 @@ export default function Painel() {
     <div className="flex h-screen flex-col bg-slate-50">
       <header className="border-b border-gray-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Painel operacional</p>
-            <h1 className="text-lg font-semibold text-gray-900">{municipio.nome} • gestão de risco arbóreo</h1>
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Painel operacional</p>
+              <h1 className="text-lg font-semibold text-gray-900">{municipio.nome} • gestão de risco arbóreo</h1>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" onClick={() => navigate("/central")}>Central</Button>

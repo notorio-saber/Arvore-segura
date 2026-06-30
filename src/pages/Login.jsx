@@ -27,9 +27,14 @@ export default function Login() {
   return (
     <div className="flex h-screen items-center justify-center bg-gradient-to-br from-forest-dark to-forest px-4">
       <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
-        <h1 className="mt-2 text-xl font-extrabold text-gray-900">Acesso da equipe municipal</h1>
-        <p className="mt-2 text-sm text-gray-500">Entre para acompanhar alertas, triagens e execuções do município.</p>
+        <div className="mb-6 flex items-center gap-3">
+          <img src="/logo.png" alt="Logo Árvore Segura" className="h-12 w-12 rounded-2xl object-cover" />
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+            <h1 className="text-xl font-extrabold text-gray-900">Acesso da equipe municipal</h1>
+          </div>
+        </div>
+        <p className="text-sm text-gray-500">Entre para acompanhar alertas, triagens e execuções do município.</p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
