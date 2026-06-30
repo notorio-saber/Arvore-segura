@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { STATUS } from "../lib/reportes";
@@ -27,6 +28,16 @@ function formatarData(value) {
   return "—";
 }
 
+function MapController({ center, zoom }) {
+  const map = useMap();
+
+  React.useEffect(() => {
+    map.flyTo(center, zoom, { duration: 1.2 });
+  }, [map, center, zoom]);
+
+  return null;
+}
+
 export default function MapView({ reports, center = [-24.9, -51.8], zoom = 7, height = "380px" }) {
   const validReports = (reports || []).filter((report) => {
     const lat = Number(report?.localizacao?.lat);
@@ -37,6 +48,7 @@ export default function MapView({ reports, center = [-24.9, -51.8], zoom = 7, he
   return (
     <div style={{ height }} className="overflow-hidden rounded-2xl border border-gray-200">
       <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%" }} scrollWheelZoom>
+        <MapController center={center} zoom={zoom} />
         <TileLayer
           attribution='&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics'
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"

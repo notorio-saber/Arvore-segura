@@ -90,7 +90,7 @@ export default function Painel() {
 
         <div className="mb-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <Card title="Mapa de ocorrências" subtitle="Veja os pontos georreferenciados e o status de cada solicitação.">
-            <MapView reports={reportes} center={[-25.4, -50.6]} zoom={11} height="420px" />
+            <MapView reports={reportes} center={municipio.coordenadas} zoom={13} height="420px" />
           </Card>
 
           <Card title="Fluxo de atendimento" subtitle="Filtre por etapa para priorizar o que precisa de ação.">
