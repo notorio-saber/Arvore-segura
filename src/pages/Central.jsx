@@ -49,8 +49,8 @@ export default function Central() {
   const topManejo = [...municipiosFiltrados].sort((a, b) => b.concluido - a.concluido).slice(0, 3);
 
   return (
-    <div className="flex h-screen flex-col bg-slate-50 px-4 py-8 text-gray-900">
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-slate-50 px-4 py-8 text-gray-900">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 min-h-0 flex-col overflow-auto">
         <PageHeader
           eyebrow="Operação Paraná"
           title="Central de métricas por prefeitura"

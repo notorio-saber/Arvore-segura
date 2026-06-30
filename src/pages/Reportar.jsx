@@ -163,8 +163,8 @@ export default function Reportar() {
   }
 
   return (
-    <div className="flex min-h-screen items-start justify-center bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-6 sm:px-4 sm:py-4">
-      <div className="flex w-full max-w-5xl flex-col gap-6 overflow-visible rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6 md:h-auto">
+    <div className="flex min-h-screen items-start justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-6 sm:px-4 sm:py-4 md:overflow-auto">
+      <div className="flex w-full max-w-5xl min-h-0 flex-col gap-6 rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6 md:h-auto">
         <div className="flex flex-col gap-4 rounded-3xl bg-forest-light/40 p-5">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
