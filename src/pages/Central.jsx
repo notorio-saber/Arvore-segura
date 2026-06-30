@@ -10,6 +10,7 @@ import MapView from "../components/MapView";
 
 export default function Central() {
   const [reports, setReports] = useState([]);
+  const [busca, setBusca] = useState("");
   const municipios = useMemo(() => obterMetricasGerais(MUNICIPIOS), []);
 
   useEffect(() => {
@@ -38,8 +39,14 @@ export default function Central() {
   const totalConcluidas = municipios.reduce((acc, item) => acc + item.concluido, 0);
   const taxaMedia = totalSolicitacoes === 0 ? 0 : Math.round((totalConcluidas / totalSolicitacoes) * 100);
 
-  const topSolicitacoes = [...municipios].sort((a, b) => b.total - a.total).slice(0, 3);
-  const topManejo = [...municipios].sort((a, b) => b.concluido - a.concluido).slice(0, 3);
+  const municipiosFiltrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+    if (!termo) return municipios;
+    return municipios.filter((municipio) => municipio.nome.toLowerCase().includes(termo));
+  }, [municipios, busca]);
+
+  const topSolicitacoes = [...municipiosFiltrados].sort((a, b) => b.total - a.total).slice(0, 3);
+  const topManejo = [...municipiosFiltrados].sort((a, b) => b.concluido - a.concluido).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 text-gray-900">
@@ -57,6 +64,16 @@ export default function Central() {
             </Link>,
           ]}
         />
+
+        <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <label className="mb-2 block text-sm font-semibold text-gray-800">Pesquisar município</label>
+          <input
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Digite o nome da cidade"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:border-forest focus:outline-none"
+          />
+        </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-3">
           <StatCard label="Solicitações registradas" value={totalSolicitacoes} hint="Total acumulado entre as prefeituras" />
@@ -107,7 +124,7 @@ export default function Central() {
         <div className="mt-6">
           <Card title="Visão detalhada por município" subtitle="Acesse o dashboard de cada prefeitura para acompanhar os riscos em andamento.">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {municipios.map((municipio) => (
+            {municipiosFiltrados.map((municipio) => (
               <div key={municipio.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
