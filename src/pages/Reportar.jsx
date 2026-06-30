@@ -127,14 +127,14 @@ export default function Reportar() {
 
   function renderHeader(title, subtitle) {
     return (
-      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
-            <h1 className="mt-2 text-2xl font-bold text-gray-900">{title}</h1>
-            {subtitle && <p className="mt-2 text-sm text-gray-600">{subtitle}</p>}
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+            <h1 className="mt-1 text-xl font-bold text-gray-900">{title}</h1>
+            {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
           </div>
-          <div className="inline-flex items-center rounded-full bg-forest-light px-4 py-2 text-sm font-semibold text-forest shadow-sm">
+          <div className="inline-flex items-center rounded-full bg-forest-light px-3 py-1.5 text-sm font-semibold text-forest shadow-sm">
             Etapa {etapaIndex + 1} de {ETAPA_ORDEM.length}
           </div>
         </div>
@@ -165,47 +165,30 @@ export default function Reportar() {
   return (
     <div className="flex min-h-screen items-start justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-6 sm:px-4 sm:py-4 md:overflow-auto">
       <div className="flex w-full max-w-5xl min-h-0 flex-col gap-6 rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6 md:h-auto">
-        <div className="flex flex-col gap-4 rounded-3xl bg-forest-light/40 p-5">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
-              <p className="text-sm text-gray-500">Coleta em campo</p>
+        {etapa !== ETAPAS.INTRO && (
+          <div className="flex flex-col gap-4 rounded-3xl bg-forest-light/40 p-5">
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+                <p className="text-sm text-gray-500">Coleta em campo</p>
+              </div>
             </div>
+            {renderHeader(headerTitle, headerSubtitle)}
           </div>
-          {renderHeader(headerTitle, headerSubtitle)}
-        </div>
+        )}
 
         {etapa === ETAPAS.INTRO ? (
-          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <Card className="min-h-[320px]">
-              <div className="space-y-6">
-                <div className="inline-flex rounded-full bg-white px-3 py-1 text-sm font-semibold text-forest shadow-sm">
-                  Fluxo de coleta
-                </div>
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-bold text-gray-900">Registre rapidamente qualquer risco arbóreo</h2>
-                  <p className="text-base text-gray-600 leading-7">
-                    O fluxo foi pensado para ser claro, rápido e intuitivo, com uma tela por informação e uma experiência próxima à coleta em campo.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <Button onClick={() => setEtapa(ETAPAS.TIPO)}>Começar registro</Button>
-                  <Button variant="secondary" onClick={() => navigate("/central")}>Ver métricas do Paraná</Button>
-                </div>
-              </div>
-            </Card>
-            <Card className="min-h-[320px]">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Como funciona</h3>
-                <ul className="space-y-3 text-sm text-gray-600">
-                  <li>• Escolha o tipo de risco</li>
-                  <li>• Descreva o que foi observado</li>
-                  <li>• Anexe uma foto</li>
-                  <li>• Confirme a localização</li>
-                </ul>
-              </div>
-            </Card>
+          <div className="flex flex-col items-center justify-center gap-8 text-center py-12">
+            <img src="/logo.png" alt="Logo Árvore Segura" className="mx-auto h-24 w-24 rounded-3xl bg-white p-3 shadow-sm" />
+            <div className="space-y-3">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+              <h2 className="text-3xl font-bold text-gray-900">Registre rapidamente qualquer risco arbóreo</h2>
+              <p className="text-sm text-gray-600">5 passos. Menos de 1 minuto. Envie um alerta de forma simples e rápida.</p>
+            </div>
+            <Button className="w-full max-w-xs mx-auto" onClick={() => setEtapa(ETAPAS.TIPO)}>
+              Registrar risco
+            </Button>
           </div>
         ) : etapa === ETAPAS.ENVIANDO ? (
           <Card className="min-h-[360px] flex items-center justify-center">
@@ -282,7 +265,7 @@ export default function Reportar() {
 
               {etapa === ETAPAS.FOTO && (
                 <div className="space-y-4">
-                  <label className="block text-sm font-semibold text-gray-800">Anexe uma foto do risco</label>
+                  <label className="block text-sm font-semibold text-gray-800">Tire uma foto com a câmera</label>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -300,9 +283,9 @@ export default function Reportar() {
               {etapa === ETAPAS.LOCALIZACAO && (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-800">Confirme a localização</label>
+                    <label className="block text-sm font-semibold text-gray-800">Fique próximo da árvore e marque a posição</label>
                     <Button type="button" variant="secondary" className="w-full" onClick={capturarGps}>
-                      {coords ? "Localização capturada ✓" : "Usar minha localização atual"}
+                      Clique aqui para marcar a localização
                     </Button>
                   </div>
                   {coords && <p className="text-sm text-gray-500">Lat {coords.lat.toFixed(5)}, Lng {coords.lng.toFixed(5)}</p>}

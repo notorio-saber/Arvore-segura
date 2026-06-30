@@ -13,11 +13,21 @@ const markerColors = {
 
 function createIcon(status) {
   const color = markerColors[status] || markerColors.pendente;
+  const svgIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="14" height="14">' +
+    '<path d="M12 2C9.243 2 7 4.243 7 7c0 1.816.96 3.415 2.427 4.292A4.5 4.5 0 0 0 8.5 16.5c0 1.337.538 2.544 1.403 3.403L10 22h4l.097-.097A4.5 4.5 0 0 0 15.5 16.5a4.5 4.5 0 0 0-1.927-5.208C16.04 10.415 17 8.816 17 7c0-2.757-2.243-5-5-5zm-1 14.5a1.5 1.5 0 0 1 3 0V18h-3v-1.5z"/>';
   return L.divIcon({
-    html: `<div style="background:${color};width:14px;height:14px;border-radius:9999px;border:3px solid white;box-shadow:0 0 0 2px ${color}33;"></div>`,
+    html:
+      '<div style="background:' +
+      color +
+      ';width:22px;height:22px;border-radius:9999px;border:3px solid white;box-shadow:0 0 0 3px ' +
+      color +
+      '33;display:flex;align-items:center;justify-content:center;">' +
+      svgIcon +
+      '</div>',
     className: "",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
   });
 }
 
@@ -47,7 +57,7 @@ export default function MapView({ reports, center = [-24.9, -51.8], zoom = 7, he
 
   return (
     <div style={{ height }} className="overflow-hidden rounded-2xl border border-gray-200">
-      <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%" }} scrollWheelZoom>
+      <MapContainer center={center} zoom={zoom} style={{ height: "100%", width: "100%" }} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false}>
         <MapController center={center} zoom={zoom} />
         <TileLayer
           attribution='&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics'
