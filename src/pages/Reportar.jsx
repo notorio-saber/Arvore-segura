@@ -185,6 +185,7 @@ export default function Reportar() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
               <h2 className="text-3xl font-bold text-gray-900">Registre rapidamente qualquer risco arbóreo</h2>
               <p className="text-sm text-gray-600">5 passos e menos de 1 minuto para enviar um alerta.</p>
+              <p className="text-xs text-gray-500">Teste de commit: alteração visível no app.</p>
             </div>
             <Button className="w-full max-w-xs mx-auto" onClick={() => setEtapa(ETAPAS.TIPO)}>
               Registrar risco
