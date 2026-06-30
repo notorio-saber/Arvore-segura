@@ -1,6 +1,7 @@
 // Camada de acesso a dados local.
 // Reportes de risco arbóreo são salvos no armazenamento local do navegador.
 import { broadcastStorageChange, readStorage, writeStorage } from "../firebase";
+import { getMunicipioById } from "./municipios";
 
 export const CATEGORIAS = [
   { id: "galho_quebrado", label: "Galho quebrado ou pendente" },
@@ -79,4 +80,32 @@ export async function atualizarStatus(municipioId, reporteId, novoStatus) {
 
   writeReportes(municipioId, atualizados);
   return atualizados;
+}
+
+export function obterMetricasPorMunicipio(municipioId) {
+  const reportes = readReportes(municipioId);
+  const municipio = getMunicipioById(municipioId);
+  const total = reportes.length;
+  const pendente = reportes.filter((reporte) => reporte.status === "pendente").length;
+  const triagem = reportes.filter((reporte) => reporte.status === "triagem").length;
+  const despachado = reportes.filter((reporte) => reporte.status === "despachado").length;
+  const concluido = reportes.filter((reporte) => reporte.status === "concluido").length;
+  const taxaConclusao = total === 0 ? 0 : Math.round((concluido / total) * 100);
+
+  return {
+    id: municipioId,
+    nome: municipio.nome,
+    regiao: municipio.regiao,
+    populacao: municipio.populacao,
+    total,
+    pendente,
+    triagem,
+    despachado,
+    concluido,
+    taxaConclusao,
+  };
+}
+
+export function obterMetricasGerais(municipios) {
+  return municipios.map((municipio) => obterMetricasPorMunicipio(municipio.id));
 }

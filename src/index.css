@@ -8,5 +8,10 @@ html, body, #root {
 
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-  background-color: #fafafa;
+  background-color: #f7faf7;
+  color: #111827;
+}
+
+::selection {
+  background-color: rgba(27, 94, 32, 0.2);
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { staffLogin } from "../lib/auth";
+import Button from "../components/ui/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,12 +25,13 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-forest-dark px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="mb-1 text-xl font-extrabold text-forest">Árvore Segura</h1>
-        <p className="mb-6 text-sm text-gray-500">Acesso da equipe municipal</p>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-forest-dark to-forest px-4">
+      <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+        <h1 className="mt-2 text-xl font-extrabold text-gray-900">Acesso da equipe municipal</h1>
+        <p className="mt-2 text-sm text-gray-500">Entre para acompanhar alertas, triagens e execuções do município.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label className="mb-1 block text-sm font-semibold text-gray-800">E-mail</label>
             <input
@@ -37,7 +39,7 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-forest focus:outline-none"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:border-forest focus:outline-none"
             />
           </div>
           <div>
@@ -47,25 +49,21 @@ export default function Login() {
               required
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-forest focus:outline-none"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:border-forest focus:outline-none"
             />
           </div>
 
-          {erro && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{erro}</p>}
+          {erro && <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{erro}</p>}
 
-          <button
-            type="submit"
-            disabled={carregando}
-            className="w-full rounded-lg bg-forest px-4 py-2.5 text-sm font-bold text-white hover:bg-forest-dark disabled:opacity-60"
-          >
+          <Button type="submit" className="w-full" disabled={carregando}>
             {carregando ? "Entrando…" : "Entrar"}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-xs text-gray-400">
-          <a href="/" className="underline">
+          <button type="button" onClick={() => navigate("/")} className="underline">
             Voltar para o reporte público
-          </a>
+          </button>
         </p>
       </div>
     </div>
