@@ -3,13 +3,20 @@
 @tailwind utilities;
 
 html, body, #root {
+  margin: 0;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   background-color: #f7faf7;
   color: #111827;
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 ::selection {

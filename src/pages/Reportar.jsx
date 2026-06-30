@@ -144,8 +144,21 @@ export default function Reportar() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-4 py-6 sm:py-8">
-      <div className="mx-auto flex max-w-4xl flex-col rounded-[32px] border border-forest/10 bg-white/90 p-4 shadow-xl backdrop-blur sm:p-6 lg:p-8">
+    <div className="flex h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-3 sm:px-4 sm:py-4">
+      <div className="flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo Árvore Segura" className="h-10 w-10 rounded-2xl object-cover" />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
+              <p className="text-sm text-gray-500">Coleta em campo</p>
+            </div>
+          </div>
+          <div className="rounded-full bg-forest-light px-3 py-1 text-sm font-semibold text-forest">
+            {ETAPA_ORDEM.indexOf(etapa) + 1}/{ETAPA_ORDEM.length}
+          </div>
+        </div>
+
         {renderHeader(
           etapa === ETAPAS.INTRO
             ? "Registro de risco"
@@ -162,7 +175,7 @@ export default function Reportar() {
         )}
 
         {etapa === ETAPAS.INTRO && (
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="grid flex-1 gap-6 overflow-hidden lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <div className="mb-4 inline-flex rounded-full bg-forest-light px-3 py-1 text-sm font-semibold text-forest">
                 Coleta em campo
@@ -189,7 +202,7 @@ export default function Reportar() {
         )}
 
         {(etapa === ETAPAS.TIPO || etapa === ETAPAS.DESCRICAO || etapa === ETAPAS.FOTO || etapa === ETAPAS.LOCALIZACAO) && (
-          <div className="rounded-3xl border border-gray-200 bg-white p-4 sm:p-6">
+          <div className="flex-1 overflow-auto rounded-3xl border border-gray-200 bg-white p-4 sm:p-6">
             <form onSubmit={async (e) => {
               if (etapa === ETAPAS.LOCALIZACAO) {
                 await handleSubmit(e);
@@ -288,7 +301,7 @@ export default function Reportar() {
         )}
 
         {etapa === ETAPAS.ENVIANDO && (
-          <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
+          <div className="flex flex-1 items-center justify-center rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
             <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-forest text-2xl font-bold text-white flex items-center justify-center">
               •
             </div>
@@ -298,7 +311,7 @@ export default function Reportar() {
         )}
 
         {etapa === ETAPAS.ERRO && (
-          <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center">
+          <div className="flex flex-1 items-center justify-center rounded-3xl border border-red-200 bg-red-50 p-8 text-center">
             <h2 className="text-xl font-bold text-red-700">Não foi possível concluir</h2>
             <p className="mt-2 text-sm text-red-600">Tente novamente ou revise os dados informados.</p>
             <div className="mt-5 flex justify-center gap-3">

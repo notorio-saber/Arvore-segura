@@ -25,7 +25,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-forest-dark to-forest px-4">
+    <div className="flex h-screen items-center justify-center bg-gradient-to-br from-forest-dark to-forest px-4">
       <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
         <h1 className="mt-2 text-xl font-extrabold text-gray-900">Acesso da equipe municipal</h1>

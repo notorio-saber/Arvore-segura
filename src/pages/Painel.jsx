@@ -56,7 +56,7 @@ export default function Painel() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="flex h-screen flex-col bg-slate-50">
       <header className="border-b border-gray-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div>
@@ -70,7 +70,7 @@ export default function Painel() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto flex-1 overflow-hidden px-4 py-8">
         <PageHeader
           eyebrow="Atendimento municipal"
           title={`Dashboard de ${municipio.nome}`}

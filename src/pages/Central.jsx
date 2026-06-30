@@ -49,8 +49,8 @@ export default function Central() {
   const topManejo = [...municipiosFiltrados].sort((a, b) => b.concluido - a.concluido).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8 text-gray-900">
-      <div className="mx-auto max-w-6xl">
+    <div className="flex h-screen flex-col bg-slate-50 px-4 py-8 text-gray-900">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col overflow-hidden">
         <PageHeader
           eyebrow="Operação Paraná"
           title="Central de métricas por prefeitura"
@@ -65,7 +65,7 @@ export default function Central() {
           ]}
         />
 
-        <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="mb-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <label className="mb-2 block text-sm font-semibold text-gray-800">Pesquisar município</label>
           <input
             value={busca}
@@ -75,13 +75,13 @@ export default function Central() {
           />
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-3">
+        <div className="mb-4 grid gap-4 md:grid-cols-3">
           <StatCard label="Solicitações registradas" value={totalSolicitacoes} hint="Total acumulado entre as prefeituras" />
           <StatCard label="Manejos concluídos" value={totalConcluidas} hint="Ações finalizadas até o momento" tone="success" />
           <StatCard label="Taxa média de conclusão" value={`${taxaMedia}%`} hint="Índice geral de execução" tone="warning" />
         </div>
 
-        <div className="mb-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="mb-4 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <Card title="Ranking por volume de solicitações" subtitle="Municípios com maior demanda registrada.">
             <div className="space-y-3">
               {topSolicitacoes.map((municipio, index) => (
@@ -118,10 +118,10 @@ export default function Central() {
         </div>
 
         <Card title="Mapa estadual das ocorrências" subtitle="Todos os pontos georreferenciados do Paraná em uma visão consolidada.">
-          <MapView reports={reports} center={[-24.9, -51.8]} zoom={6} height="460px" />
+          <MapView reports={reports} center={[-24.9, -51.8]} zoom={6} height="320px" />
         </Card>
 
-        <div className="mt-6">
+        <div className="mt-4 flex-1 overflow-auto">
           <Card title="Visão detalhada por município" subtitle="Acesse o dashboard de cada prefeitura para acompanhar os riscos em andamento.">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {municipiosFiltrados.map((municipio) => (
