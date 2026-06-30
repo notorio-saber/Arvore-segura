@@ -163,7 +163,7 @@ export default function Reportar() {
   }
 
   return (
-    <div className="flex min-h-screen items-start justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-6 sm:px-4 sm:py-4 md:overflow-auto">
+    <div className="flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(232,242,233,0.8),_transparent_50%)] px-3 py-6 sm:px-4 sm:py-8 md:overflow-auto">
       <div className="flex w-full max-w-5xl min-h-0 flex-col gap-6 rounded-[32px] border border-forest/10 bg-white/95 p-3 shadow-xl backdrop-blur sm:p-5 lg:p-6 md:h-auto">
         {etapa !== ETAPAS.INTRO && (
           <div className="flex flex-col gap-4 rounded-3xl bg-forest-light/40 p-5">
@@ -184,7 +184,7 @@ export default function Reportar() {
             <div className="space-y-3">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-forest">Árvore Segura</p>
               <h2 className="text-3xl font-bold text-gray-900">Registre rapidamente qualquer risco arbóreo</h2>
-              <p className="text-sm text-gray-600">5 passos. Menos de 1 minuto. Envie um alerta de forma simples e rápida.</p>
+              <p className="text-sm text-gray-600">5 passos e menos de 1 minuto para enviar um alerta.</p>
             </div>
             <Button className="w-full max-w-xs mx-auto" onClick={() => setEtapa(ETAPAS.TIPO)}>
               Registrar risco

@@ -34,17 +34,27 @@ export default function ReportCard({ reporte, onStatusChange }) {
 
         {reporte.descricao && <p className="mt-1 text-sm text-gray-600">{reporte.descricao}</p>}
 
-        <div className="mt-2 flex flex-wrap gap-4 text-xs text-gray-500">
+        <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-500">
           <span>Reportado em {formatarData(reporte.criadoEm)}</span>
           {typeof reporte.localizacao?.lat === "number" && (
-            <a
-              className="underline"
-              target="_blank"
-              rel="noreferrer"
-              href={`https://www.google.com/maps?q=${reporte.localizacao.lat},${reporte.localizacao.lng}`}
-            >
-              Ver no mapa
-            </a>
+            <> 
+              <a
+                className="underline"
+                target="_blank"
+                rel="noreferrer"
+                href={`https://www.google.com/maps?q=${reporte.localizacao.lat},${reporte.localizacao.lng}`}
+              >
+                Ver no mapa
+              </a>
+              <a
+                className="underline"
+                target="_blank"
+                rel="noreferrer"
+                href={`https://www.google.com/maps/dir/?api=1&destination=${reporte.localizacao.lat},${reporte.localizacao.lng}`}
+              >
+                Obter rota
+              </a>
+            </>
           )}
         </div>
 
