@@ -62,11 +62,19 @@ export default function MapView({ reports, center = [-24.9, -51.8], zoom = 7, he
               icon={createIcon(report.status)}
             >
               <Popup>
-                <div className="space-y-1 text-sm">
+                <div className="space-y-3 text-sm">
                   <p className="font-semibold text-gray-900">{report.categoria || "Risco reportado"}</p>
                   <p className="text-gray-600">{report.descricao || "Sem descrição adicional"}</p>
                   <p className="text-xs text-gray-500">Status: {statusInfo.label}</p>
                   <p className="text-xs text-gray-500">Registrado em {formatarData(report.criadoEm)}</p>
+                  <a
+                    className="inline-flex rounded-full bg-forest px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-forest-dark"
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${Number(report.localizacao.lat)},${Number(report.localizacao.lng)}`}
+                  >
+                    Obter rota
+                  </a>
                 </div>
               </Popup>
             </Marker>
