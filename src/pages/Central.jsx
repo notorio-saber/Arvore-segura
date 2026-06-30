@@ -1,14 +1,38 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { obterMetricasGerais } from "../lib/reportes";
 import { MUNICIPIOS } from "../lib/municipios";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import StatCard from "../components/ui/StatCard";
 import Button from "../components/ui/Button";
+import MapView from "../components/MapView";
 
 export default function Central() {
+  const [reports, setReports] = useState([]);
   const municipios = useMemo(() => obterMetricasGerais(MUNICIPIOS), []);
+
+  useEffect(() => {
+    function carregarReports() {
+      const all = [];
+      MUNICIPIOS.forEach((municipio) => {
+        const data = window.localStorage.getItem(`arvore-segura:reportes:${municipio.id}`);
+        if (data) {
+          try {
+            const parsed = JSON.parse(data);
+            all.push(...parsed);
+          } catch {
+            // ignore
+          }
+        }
+      });
+      setReports(all);
+    }
+
+    carregarReports();
+    window.addEventListener("arvore-segura-storage", carregarReports);
+    return () => window.removeEventListener("arvore-segura-storage", carregarReports);
+  }, []);
 
   const totalSolicitacoes = municipios.reduce((acc, item) => acc + item.total, 0);
   const totalConcluidas = municipios.reduce((acc, item) => acc + item.concluido, 0);
@@ -76,7 +100,12 @@ export default function Central() {
           </Card>
         </div>
 
-        <Card title="Visão detalhada por município" subtitle="Acesse o dashboard de cada prefeitura para acompanhar os riscos em andamento.">
+        <Card title="Mapa estadual das ocorrências" subtitle="Todos os pontos georreferenciados do Paraná em uma visão consolidada.">
+          <MapView reports={reports} center={[-24.9, -51.8]} zoom={6} height="460px" />
+        </Card>
+
+        <div className="mt-6">
+          <Card title="Visão detalhada por município" subtitle="Acesse o dashboard de cada prefeitura para acompanhar os riscos em andamento.">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {municipios.map((municipio) => (
               <div key={municipio.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
@@ -108,7 +137,8 @@ export default function Central() {
               </div>
             ))}
           </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );

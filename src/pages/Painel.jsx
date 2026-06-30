@@ -8,6 +8,7 @@ import PageHeader from "../components/ui/PageHeader.jsx";
 import Card from "../components/ui/Card.jsx";
 import StatCard from "../components/ui/StatCard.jsx";
 import Button from "../components/ui/Button.jsx";
+import MapView from "../components/MapView.jsx";
 import { getMunicipioById } from "../lib/municipios.js";
 import { MUNICIPIO_ID } from "../firebase.js";
 
@@ -87,8 +88,13 @@ export default function Painel() {
           <StatCard label="Taxa de conclusão" value={`${taxaConclusao}%`} hint="Execução da equipe" />
         </div>
 
-        <Card title="Fluxo de atendimento" subtitle="Filtre por etapa para priorizar o que precisa de ação.">
-          <div className="mb-5 flex flex-wrap gap-2">
+        <div className="mb-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <Card title="Mapa de ocorrências" subtitle="Veja os pontos georreferenciados e o status de cada solicitação.">
+            <MapView reports={reportes} center={[-25.4, -50.6]} zoom={11} height="420px" />
+          </Card>
+
+          <Card title="Fluxo de atendimento" subtitle="Filtre por etapa para priorizar o que precisa de ação.">
+            <div className="mb-5 flex flex-wrap gap-2">
             <button
               onClick={() => setFiltro("todos")}
               className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
@@ -110,22 +116,23 @@ export default function Painel() {
             ))}
           </div>
 
-          {reportesFiltrados.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
-              Nenhum alerta nessa categoria ainda.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {reportesFiltrados.map((reporte) => (
-                <ReportCard
-                  key={reporte.id}
-                  reporte={reporte}
-                  onStatusChange={handleStatusChange}
-                />
-              ))}
-            </div>
-          )}
-        </Card>
+            {reportesFiltrados.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+                Nenhum alerta nessa categoria ainda.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {reportesFiltrados.map((reporte) => (
+                  <ReportCard
+                    key={reporte.id}
+                    reporte={reporte}
+                    onStatusChange={handleStatusChange}
+                  />
+                ))}
+              </div>
+            )}
+          </Card>
+        </div>
       </main>
     </div>
   );
