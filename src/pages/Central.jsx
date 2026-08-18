@@ -90,12 +90,16 @@ export default function Central() {
         <div className="mb-6 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
           
           {/* Coluna Esquerda: MAPA (Fixo) */}
-          <div className="flex flex-col gap-4 lg:h-[80vh] lg:sticky lg:top-4">
-             <Card title="Mapa estadual das ocorrências" subtitle="Visão consolidada de todas as solicitações." className="h-full flex flex-col flex-1">
-               <div className="flex-1 min-h-[300px] mt-2 rounded-xl overflow-hidden">
+          <div className="flex flex-col gap-4 lg:h-[calc(100vh-8rem)] lg:sticky lg:top-8">
+             <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col h-full">
+               <div className="mb-4">
+                 <h3 className="text-base font-semibold text-gray-900">Mapa estadual das ocorrências</h3>
+                 <p className="mt-1 text-sm text-gray-500">Visão consolidada de todas as solicitações.</p>
+               </div>
+               <div className="flex-1 min-h-[400px] rounded-xl overflow-hidden">
                  <MapView reports={reports} center={mapCenter} zoom={mapZoom} height="100%" />
                </div>
-             </Card>
+             </div>
           </div>
 
           {/* Coluna Direita: Conteúdo Rola Normalmente */}
