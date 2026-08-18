@@ -187,9 +187,17 @@ export default function Reportar() {
               <p className="text-sm text-gray-600">5 passos e menos de 1 minuto para enviar um alerta.</p>
               <p className="text-xs text-gray-500">Teste de commit: alteração visível no app.</p>
             </div>
-            <Button className="w-full max-w-xs mx-auto" onClick={() => setEtapa(ETAPAS.TIPO)}>
-              Registrar risco
-            </Button>
+            <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
+              <Button className="w-full" onClick={() => setEtapa(ETAPAS.TIPO)}>
+                Fazer o registro
+              </Button>
+              <Button variant="secondary" className="w-full" onClick={() => navigate("/central")}>
+                Acessar cidades do PR
+              </Button>
+              <Button variant="ghost" className="w-full" onClick={() => navigate("/login")}>
+                Entrar como prefeitura
+              </Button>
+            </div>
           </div>
         ) : etapa === ETAPAS.ENVIANDO ? (
           <Card className="min-h-[360px] flex items-center justify-center">
