@@ -11,6 +11,8 @@ import MapView from "../components/MapView";
 export default function Central() {
   const [reports, setReports] = useState([]);
   const [busca, setBusca] = useState("");
+  const [mapCenter, setMapCenter] = useState([-24.9, -51.8]);
+  const [mapZoom, setMapZoom] = useState(6);
   const municipios = useMemo(() => obterMetricasGerais(MUNICIPIOS), []);
 
   useEffect(() => {
@@ -44,6 +46,19 @@ export default function Central() {
     if (!termo) return municipios;
     return municipios.filter((municipio) => municipio.nome.toLowerCase().includes(termo));
   }, [municipios, busca]);
+
+  useEffect(() => {
+    if (busca.trim().length >= 3 && municipiosFiltrados.length > 0) {
+      const target = municipiosFiltrados.find((m) => m.coordenadas);
+      if (target) {
+        setMapCenter(target.coordenadas);
+        setMapZoom(11);
+      }
+    } else if (!busca.trim()) {
+      setMapCenter([-24.9, -51.8]);
+      setMapZoom(6);
+    }
+  }, [busca, municipiosFiltrados]);
 
   const topSolicitacoes = [...municipiosFiltrados].sort((a, b) => b.total - a.total).slice(0, 3);
   const topManejo = [...municipiosFiltrados].sort((a, b) => b.concluido - a.concluido).slice(0, 3);
@@ -118,14 +133,24 @@ export default function Central() {
         </div>
 
         <Card title="Mapa estadual das ocorrências" subtitle="Todos os pontos georreferenciados do Paraná em uma visão consolidada.">
-          <MapView reports={reports} center={[-24.9, -51.8]} zoom={6} height="320px" />
+          <MapView reports={reports} center={mapCenter} zoom={mapZoom} height="320px" />
         </Card>
 
         <div className="mt-4 flex-1 overflow-auto">
           <Card title="Visão detalhada por município" subtitle="Acesse o dashboard de cada prefeitura para acompanhar os riscos em andamento.">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {municipiosFiltrados.map((municipio) => (
-              <div key={municipio.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+              <div 
+                key={municipio.id} 
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-4 transition-colors hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  if (municipio.coordenadas) {
+                    setMapCenter(municipio.coordenadas);
+                    setMapZoom(13);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h3 className="font-semibold text-gray-900">{municipio.nome}</h3>
@@ -135,11 +160,11 @@ export default function Central() {
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl bg-white p-3">
+                  <div className="rounded-xl bg-white p-3 shadow-sm">
                     <p className="text-gray-500">Solicitações</p>
                     <p className="mt-1 text-lg font-bold text-gray-900">{municipio.total}</p>
                   </div>
-                  <div className="rounded-xl bg-white p-3">
+                  <div className="rounded-xl bg-white p-3 shadow-sm">
                     <p className="text-gray-500">Concluídos</p>
                     <p className="mt-1 text-lg font-bold text-forest">{municipio.concluido}</p>
                   </div>
@@ -147,7 +172,7 @@ export default function Central() {
 
                 <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
                   <span>Taxa de conclusão: <strong>{municipio.taxaConclusao}%</strong></span>
-                  <Link to={`/painel/${municipio.id}`}>
+                  <Link to={`/painel/${municipio.id}`} onClick={(e) => e.stopPropagation()}>
                     <Button variant="ghost" size="sm">Abrir dashboard</Button>
                   </Link>
                 </div>

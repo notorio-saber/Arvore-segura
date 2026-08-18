@@ -82,6 +82,18 @@ export async function atualizarStatus(municipioId, reporteId, novoStatus) {
   return atualizados;
 }
 
+export async function atualizarAuc(municipioId, reporteId, precisaAuc) {
+  const reportes = readReportes(municipioId);
+  const atualizados = reportes.map((reporte) =>
+    reporte.id === reporteId
+      ? { ...reporte, precisaAuc, atualizadoEm: new Date().toISOString() }
+      : reporte
+  );
+
+  writeReportes(municipioId, atualizados);
+  return atualizados;
+}
+
 export function obterMetricasPorMunicipio(municipioId) {
   const reportes = readReportes(municipioId);
   const municipio = getMunicipioById(municipioId);
@@ -90,6 +102,7 @@ export function obterMetricasPorMunicipio(municipioId) {
   const triagem = reportes.filter((reporte) => reporte.status === "triagem").length;
   const despachado = reportes.filter((reporte) => reporte.status === "despachado").length;
   const concluido = reportes.filter((reporte) => reporte.status === "concluido").length;
+  const auc = reportes.filter((reporte) => reporte.precisaAuc === true).length;
   const taxaConclusao = total === 0 ? 0 : Math.round((concluido / total) * 100);
 
   return {
@@ -97,11 +110,13 @@ export function obterMetricasPorMunicipio(municipioId) {
     nome: municipio.nome,
     regiao: municipio.regiao,
     populacao: municipio.populacao,
+    coordenadas: municipio.coordenadas,
     total,
     pendente,
     triagem,
     despachado,
     concluido,
+    auc,
     taxaConclusao,
   };
 }

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { staffLogout } from "../lib/auth";
-import { escutarReportes, atualizarStatus, STATUS } from "../lib/reportes";
+import { escutarReportes, atualizarStatus, atualizarAuc, STATUS } from "../lib/reportes";
 import ReportCard from "../components/ReportCard.jsx";
 import PageHeader from "../components/ui/PageHeader.jsx";
 import Card from "../components/ui/Card.jsx";
@@ -21,6 +21,9 @@ export default function Painel() {
 
   const municipioId = municipioParam || staff?.municipioId || MUNICIPIO_ID;
   const municipio = useMemo(() => getMunicipioById(municipioId), [municipioId]);
+  
+  const [mapCenter, setMapCenter] = useState(municipio.coordenadas || [-24.9, -51.8]);
+  const [mapZoom, setMapZoom] = useState(13);
 
   useEffect(() => {
     if (!municipioId) return;
@@ -30,13 +33,15 @@ export default function Painel() {
 
   const reportesFiltrados = useMemo(() => {
     if (filtro === "todos") return reportes;
+    if (filtro === "auc") return reportes.filter((r) => r.precisaAuc === true);
     return reportes.filter((r) => r.status === filtro);
   }, [reportes, filtro]);
 
   const resumo = useMemo(() => {
-    const base = { todos: reportes.length, pendente: 0, triagem: 0, despachado: 0, concluido: 0 };
+    const base = { todos: reportes.length, pendente: 0, triagem: 0, despachado: 0, concluido: 0, auc: 0 };
     reportes.forEach((reporte) => {
       if (base[reporte.status] !== undefined) base[reporte.status] += 1;
+      if (reporte.precisaAuc) base.auc += 1;
     });
     return base;
   }, [reportes]);
@@ -48,6 +53,18 @@ export default function Painel() {
 
   async function handleStatusChange(reporteId, novoStatus) {
     await atualizarStatus(municipioId, reporteId, novoStatus);
+  }
+
+  async function handleToggleAuc(reporteId, atual) {
+    await atualizarAuc(municipioId, reporteId, !atual);
+  }
+
+  function handleSelectReport(reporte) {
+    if (reporte.localizacao?.lat && reporte.localizacao?.lng) {
+      setMapCenter([reporte.localizacao.lat, reporte.localizacao.lng]);
+      setMapZoom(18);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   async function handleLogout() {
@@ -93,7 +110,7 @@ export default function Painel() {
 
         <div className="mb-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <Card title="Mapa de ocorrências" subtitle="Veja os pontos georreferenciados e o status de cada solicitação.">
-            <MapView reports={reportes} center={municipio.coordenadas || [-24.9, -51.8]} zoom={13} height="420px" />
+            <MapView reports={reportes} center={mapCenter} zoom={mapZoom} height="420px" />
           </Card>
 
           <Card title="Fluxo de atendimento" subtitle="Filtre por etapa para priorizar o que precisa de ação.">
@@ -117,6 +134,14 @@ export default function Painel() {
                 {STATUS[key].label} ({resumo[key] || 0})
               </button>
             ))}
+            <button
+              onClick={() => setFiltro("auc")}
+              className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
+                filtro === "auc" ? "bg-red-600 text-white" : "bg-red-50 text-red-700 border border-red-200 shadow-sm hover:bg-red-100"
+              }`}
+            >
+              Requer AUC ({resumo.auc})
+            </button>
           </div>
 
             {reportesFiltrados.length === 0 ? (
@@ -130,6 +155,8 @@ export default function Painel() {
                     key={reporte.id}
                     reporte={reporte}
                     onStatusChange={handleStatusChange}
+                    onToggleAuc={handleToggleAuc}
+                    onSelect={() => handleSelectReport(reporte)}
                   />
                 ))}
               </div>
