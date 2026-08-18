@@ -655,7 +655,7 @@ export const MUNICIPIOS = [
     "nome": "Curitiba",
     "regiao": "Metropolitana de Curitiba",
     "populacao": "-",
-    "coordenadas": null
+    "coordenadas": [-25.4284, -49.2733]
   },
   {
     "id": "curiuva-pr",
@@ -1068,7 +1068,7 @@ export const MUNICIPIOS = [
     "nome": "Irati",
     "regiao": "Sudeste Paranaense",
     "populacao": "-",
-    "coordenadas": null
+    "coordenadas": [-25.4678, -50.6511]
   },
   {
     "id": "iretama-pr",

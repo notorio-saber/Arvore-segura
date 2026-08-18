@@ -38,7 +38,7 @@ export async function criarReporte(municipioId, dados, uid) {
     categoria: dados.categoria,
     descricao: dados.descricao || "",
     localizacao: { lat: dados.lat, lng: dados.lng },
-    fotoUrl: null,
+    fotoUrl: dados.fotoUrl || null,
     contato: dados.contato || null,
     status: "pendente",
     reportadoPor: uid,

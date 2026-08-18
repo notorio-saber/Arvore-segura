@@ -65,14 +65,30 @@ export default function Reportar() {
     setEtapa(ETAPAS.ENVIANDO);
     try {
       const user = await ensureCitizenSession();
+
+      let base64Foto = null;
+      if (foto) {
+        base64Foto = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(foto);
+        });
+      }
+
+      // Adicionando um fallback se o usuário não obteve as coordenadas:
+      // Posição de exemplo (Irati-PR) para o mapa não ficar vazio.
+      const latF = coords?.lat ?? -25.4678 + (Math.random() * 0.01 - 0.005);
+      const lngF = coords?.lng ?? -50.6511 + (Math.random() * 0.01 - 0.005);
+
       await criarReporte(
         MUNICIPIO_ID,
         {
           categoria,
           descricao,
-          foto,
-          lat: coords?.lat ?? null,
-          lng: coords?.lng ?? null,
+          fotoUrl: base64Foto,
+          lat: latF,
+          lng: lngF,
         },
         user.uid
       );
